@@ -10,6 +10,20 @@
 
 函数、隐式转换、字符集/排序规则不一致可能影响访问路径，但具体方向由类型和优化器决定；函数索引、生成列和不同版本能力也会改变结论。不能看到函数就一律断言索引失效。
 
+字符串列与数字参数比较时，先核对隐式数值转换：`code = 1` 与 `code = '1'` 可能匹配不同记录，不能仅为利用索引而改变参数类型；改写前确认要按字符串编码还是数值比较。
+
+LIKE 的前导通配符通常不能形成普通 B-tree 前缀范围，`LIKE '%abc%'` 不能仅靠机械增加同列普通索引就保证高效；覆盖扫描、全文检索或其他搜索方式需根据计划与匹配语义另行评估，不能把包含匹配改成前缀匹配冒充等价优化。
+
+## 避免从结构直接推断执行结果
+
+多个单列索引不等于AND组合查询一定低效：优化器可能选择有选择性的单索引、适用的Index Merge等路径，也可能扫描小表。缺少复合索引不能直接作为“核心性能缺陷”；先核对最终过滤、排序、返回列和命中行数。
+
+未看到计划，不能断言所有剩余条件都在回表后由server过滤。条件可能参与索引访问、索引条件下推、覆盖读取或其他执行阶段；实际位置依计划、引擎和表达式而定。普通索引无法给某个表达式形成范围，也不等于整条查询必然全表扫描。
+
+DDL只有可选范围与约束，不含实际频率或分布。`deleted DEFAULT 0`不能证明现有记录几乎全是0，低基数字段也不是在所有查询下都无索引价值。不要固定推荐“选2—3个组合”；数量和收益由负载与成本决定。
+
+`order_id`与`order_number`同时出现，不足以证明一一对应。需要适当租户范围内的唯一约束或用户明确保证；即使存在依赖，也要核对过滤、覆盖和其他工作负载后再判断索引是否冗余。
+
 ## 阅读计划
 
 传统 EXPLAIN 中 possible_keys 是候选、key 是所选，rows/filtered 是估算。key非空可能只是大范围索引扫描；type=ALL 在小表或需返回大部分数据时可以合理。Using filesort 不等于一定写磁盘，Using temporary 也不是独立的性能定罪证据。
@@ -26,7 +40,11 @@ EXPLAIN ANALYZE 的实际行数、时间与 loops 要结合目标版本解释：
 
 ## 官方资料
 
-- [MySQL 8.4 EXPLAIN](https://dev.mysql.com/doc/refman/8.4/en/explain.html)
-- [MySQL 8.4 联合索引](https://dev.mysql.com/doc/refman/8.4/en/multiple-column-indexes.html)
+- [MySQL 8.0 Index Merge](https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html)
+- [MySQL 8.0 LIMIT 与同值排序](https://dev.mysql.com/doc/refman/8.0/en/limit-optimization.html)
+- [MySQL 8.0 类型转换](https://dev.mysql.com/doc/refman/8.0/en/type-conversion.html)
+- [MySQL 8.0 字符串比较](https://dev.mysql.com/doc/refman/8.0/en/string-comparison-functions.html)
+- [MySQL 8.0 EXPLAIN](https://dev.mysql.com/doc/refman/8.0/en/explain.html)
+- [MySQL 8.0 联合索引](https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html)
 
-8.4 仅为参考基线；目标是 MySQL 5.7/8.0 或 MariaDB 时先核对对应版本，不直接承诺相同语法和优化器行为。
+8.0 仅为参考基线；目标是 MySQL 5.7、8.4 或 MariaDB 时先核对对应版本，不直接承诺相同语法和优化器行为。

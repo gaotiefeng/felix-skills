@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | java-incident-triage | [故障初查](skills/java-incident-triage/SKILL.md) | 证据、原因判断与下一步检查 |
 | java-change-review | [变更审查](skills/java-change-review/SKILL.md) | 有位置、触发条件和影响的缺陷报告 |
-| mysql-query-review | [SQL 审查](skills/mysql-query-review/SKILL.md) | SQL 语义、索引与执行计划分析及验证建议 |
+| mysql-query-review | [SQL 审查](skills/mysql-query-review/SKILL.md) | SQL 语法检查、查询优化、索引与执行计划分析 |
 
 ## 安装与使用
 
@@ -39,6 +39,12 @@
 
 ## MySQL 查询审查
 
-提供 SQL（含参数类型）、表结构、现有索引、数据规模和已有执行计划，即可请求“使用 mysql-query-review，只分析材料，给出有依据的优化建议”。材料不全也可先做静态分析。无需数据库账号或 MySQL MCP。
+`mysql-query-review` 聚焦 SQL 语法检查、查询优化、索引设计与执行计划分析。提供 SQL 即可先做静态检查；补充版本、表结构、现有索引和计划后，可进一步核对字段、索引匹配与访问成本。
 
-合成案例：[mysql-cases.md](evaluations/mysql-cases.md)；判定标准：[mysql-rubric.md](evaluations/mysql-rubric.md)。当前未进行真实数据库性能测试或客户端行为验证。
+示例：“使用 mysql-query-review，检查下面 SQL 的语法、优化方向和索引；说明依据及验证步骤，只分析材料，不执行数据库操作。”
+
+该技能不包含行业业务公式审计。静态检查不等于目标 MySQL 已验证通过，也不保证发现所有错误；没有实测不承诺提速比例。不需要数据库账号、MCP 或独立程序，不自动执行 SQL 或创建索引。
+
+试用见[日期条件优化 Demo](skills/mysql-query-review/examples/optimization.md)。安装时复制整个 `skills/mysql-query-review/` 目录，保留 references、examples 和 LICENSE。
+
+[评估输入](evaluations/mysql-cases.md)与[评判标准](evaluations/mysql-rubric.md)独立保存，执行范围见[验证记录](evaluations/validation.md)。当前未完成全量独立行为测试或真实数据库性能验证。
