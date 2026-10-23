@@ -1,0 +1,5 @@
+[project]
+name = "rest-orders-mcp-example"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["mcp==2.3.0"]

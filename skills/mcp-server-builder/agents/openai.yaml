@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCP 服务器开发"
+  short_description: "根据 API 文档或项目源码开发 MCP 工具，支持 Python 与 TypeScript"
+  default_prompt: "使用 $mcp-server-builder，根据我提供的 API 文档或项目源码开发 MCP 服务器，完成鉴权、错误处理、模拟测试和目标客户端接入说明。"
