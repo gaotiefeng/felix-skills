@@ -4,6 +4,7 @@
 
 | Skill | 入口 | 交付 |
 | --- | --- | --- |
+| incident-evidence-triage | [故障证据初查](skills/incident-evidence-triage/SKILL.md) | 跨系统时间线、证据链与最小验证步骤 |
 | java-incident-triage | [故障初查](skills/java-incident-triage/SKILL.md) | 证据、原因判断与下一步检查 |
 | java-change-review | [变更审查](skills/java-change-review/SKILL.md) | 有位置、触发条件和影响的缺陷报告 |
 | mysql-query-review | [SQL 审查](skills/mysql-query-review/SKILL.md) | SQL 语法检查、查询优化、索引与执行计划分析 |
@@ -12,7 +13,7 @@
 
 每个 `skills/<名称>/` 是独立技能包。把所选目录整体导入支持 Agent Skills 的客户端，不要只复制 SKILL.md，否则相对引用会缺失。具体安装入口以客户端说明为准；本仓库还未进行 WorkBuddy 等客户端的实际加载测试。
 
-现有技能不依赖常驻 Python 服务、API Key 或 MCP。Java/MySQL 分析技能仅分析用户材料时无需 Java 运行环境；读取仓库差异需要 Git，执行测试时才需要项目要求的 JDK 与构建工具。这里的分析输出不是运行过线上诊断的证明。
+这些技能可基于本地材料工作，不要求常驻 Python 服务、API Key 或 MCP。incident-evidence-triage 还可利用已有且获授权的 MCP 连接进行只读取证；仓库不附带具体平台的 MCP server。Java/MySQL 分析技能仅分析用户材料时无需 Java 运行环境；读取仓库差异需要 Git，执行测试时才需要项目要求的 JDK 与构建工具。这里的分析输出不是运行过线上诊断的证明。
 
 示例请求：
 

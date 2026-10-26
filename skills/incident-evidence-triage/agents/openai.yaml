@@ -1,0 +1,4 @@
+interface:
+  display_name: "故障证据初查"
+  short_description: "关联日志、告警和发布记录，建立可追溯的故障时间线与验证计划"
+  default_prompt: "使用 $incident-evidence-triage 分析这些日志、告警与发布记录，给出附来源的时间线、原因判断和最小验证步骤。"
